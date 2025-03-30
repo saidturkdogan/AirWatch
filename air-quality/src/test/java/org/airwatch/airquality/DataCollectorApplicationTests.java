@@ -1,13 +1,13 @@
-package org.airwatch.airwatch;
+package org.airwatch.airquality;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AirWatchApplicationTests {
+class DataCollectorApplicationTests {
 
-    @Test
-    void contextLoads() {
-    }
+  @Test
+  void contextLoads() {
+  }
 
 }

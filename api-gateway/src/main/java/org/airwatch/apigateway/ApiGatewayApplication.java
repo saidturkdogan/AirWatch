@@ -1,13 +1,13 @@
-package org.airwatch.airwatch;
+package org.airwatch.apigateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AirWatchApplication {
+public class ApiGatewayApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AirWatchApplication.class, args);
+        SpringApplication.run(ApiGatewayApplication.class, args);
     }
 
 }
