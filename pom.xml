@@ -18,6 +18,8 @@
     <modules>
         <module>api-gateway</module>
         <module>air-quality</module>
+        <module>anomaly-detection</module>
+        <module>notification-service</module>
     </modules>
 
     <properties>
