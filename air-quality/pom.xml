@@ -65,6 +65,12 @@
             <artifactId>influxdb-client-java</artifactId>
         </dependency>
 
+        <!-- Annotations -->
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+        </dependency>
+
         <!-- Lombok için -->
         <dependency>
             <groupId>org.projectlombok</groupId>
