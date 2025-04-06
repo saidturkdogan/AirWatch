@@ -14,7 +14,7 @@ public class KafkaConsumerService {
 
     private final NotificationService notificationService;
 
-    @KafkaListener(topics = KafkaConfig.ANOMALY_TOPIC, groupId = "${spring.kafka.consumer.group-id}", errorHandler = "kafkaErrorHandler")
+    @KafkaListener(topics = KafkaConfig.ANOMALY_TOPIC, groupId = "${spring.kafka.consumer.group-id}")
     public void consumeAnomalyNotification(Anomaly anomaly) {
         try {
             log.info("Received anomaly notification: {}", anomaly);

@@ -14,7 +14,7 @@ public class KafkaConsumerService {
 
     private final AnomalyDetectionService anomalyDetectionService;
 
-    @KafkaListener(topics = KafkaConfig.AIR_QUALITY_TOPIC, groupId = "${spring.kafka.consumer.group-id}", errorHandler = "kafkaErrorHandler")
+    @KafkaListener(topics = KafkaConfig.AIR_QUALITY_TOPIC, groupId = "${spring.kafka.consumer.group-id}")
     public void consumeAirQualityData(AirQualityData airQualityData) {
         try {
             log.info("Received air quality data: {}", airQualityData);
