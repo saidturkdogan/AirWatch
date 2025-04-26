@@ -23,21 +23,18 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
 
-  # InfluxDB servisini de ekleyelim
-  influxdb:
-    image: influxdb:latest
-    container_name: influxdb
+  # TimescaleDB servisini ekleyelim
+  timescaledb:
+    image: timescale/timescaledb:latest-pg14
+    container_name: timescaledb
     ports:
-      - "8086:8086"
+      - "5432:5432"
     environment:
-      - DOCKER_INFLUXDB_INIT_MODE=setup
-      - DOCKER_INFLUXDB_INIT_USERNAME=admin
-      - DOCKER_INFLUXDB_INIT_PASSWORD=password123
-      - DOCKER_INFLUXDB_INIT_ORG=airwatch
-      - DOCKER_INFLUXDB_INIT_BUCKET=air-quality
-      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=my-super-secret-token
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password123
+      - POSTGRES_DB=airwatch
     volumes:
-      - influxdb-data:/var/lib/influxdb2
+      - timescaledb-data:/var/lib/postgresql/data
 
 volumes:
-  influxdb-data:
+  timescaledb-data:

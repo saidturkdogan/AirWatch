@@ -20,7 +20,7 @@ public class NotificationService {
 
     public void processAnomalyNotification(Anomaly anomaly) {
         log.info("Processing anomaly notification: {}", anomaly);
-        
+
         // Create notification from anomaly
         Notification notification = Notification.builder()
                 .id(UUID.randomUUID().toString())
@@ -31,35 +31,35 @@ public class NotificationService {
                 .read(false)
                 .source("anomaly-detection-service")
                 .build();
-        
+
         // Save notification
         notificationRepository.save(notification);
-        
+
         // In a real application, this would send an email, SMS, or push notification
         sendNotification(notification);
     }
-    
+
     private void sendNotification(Notification notification) {
         // This is a placeholder for actual notification sending logic
         // In a real application, this would integrate with email, SMS, or push notification services
         log.info("Sending notification: {}", notification);
         log.info("ALERT: {} - {}", notification.getSeverity(), notification.getMessage());
     }
-    
+
     public List<Notification> getAllNotifications() {
         return notificationRepository.findAll();
     }
-    
+
     public List<Notification> getUnreadNotifications() {
         return notificationRepository.findByRead(false);
     }
-    
+
     public Notification markAsRead(String id) {
-        Notification notification = notificationRepository.findById(id);
-        if (notification != null) {
-            notification.setRead(true);
-            return notificationRepository.save(notification);
-        }
-        return null;
+        return notificationRepository.findById(id)
+            .map(notification -> {
+                notification.setRead(true);
+                return notificationRepository.save(notification);
+            })
+            .orElse(null);
     }
 }

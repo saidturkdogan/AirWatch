@@ -1,5 +1,6 @@
 package org.airwatch.airquality.model;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,11 +12,15 @@ import java.time.Instant;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "air_quality_data")
 public class AirQualityData {
+    @Id
     private String id;
     private Double latitude;
     private Double longitude;
     private String location;
+    @Column(columnDefinition = "TIMESTAMPTZ")
     private Instant timestamp;
     private Double pm25;
     private Double pm10;
