@@ -1,4 +1,4 @@
-[![Image](https://i.hizliresim.com/8n5tsw9.png)](https://hizliresim.com/8n5tsw9)
+[![Image]([https://i.hizliresim.com/8n5tsw9.png)](https://hizliresim.com/8n5tsw9](https://i.hizliresim.com/8n5tsw9.png?_gl=1*wg06sx*_ga*ODg0NzM1OTkyLjE3NDU3MTUxODQ.*_ga_M9ZRXYS2YN*MTc0NTcxNTE4NC4xLjEuMTc0NTcxNTI1MC42MC4wLjA.))
 
 # AirWatch - Air Quality Monitoring System
 
