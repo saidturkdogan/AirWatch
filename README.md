@@ -1,10 +1,12 @@
-[![Image]([https://i.hizliresim.com/8n5tsw9.png)](https://hizliresim.com/8n5tsw9](https://i.hizliresim.com/8n5tsw9.png?_gl=1*wg06sx*_ga*ODg0NzM1OTkyLjE3NDU3MTUxODQ.*_ga_M9ZRXYS2YN*MTc0NTcxNTE4NC4xLjEuMTc0NTcxNTI1MC42MC4wLjA.))
+<p align="center">
+  <img src="https://i.hizliresim.com/8n5tsw9.png" alt="AirWatch Logo" width="600">
+</p>
 
-# AirWatch - Air Quality Monitoring System
+## AirWatch - Air Quality Monitoring System
 
 AirWatch is a microservice-based system designed to collect, analyze, and detect anomalies in air quality data. This system monitors air quality data from various locations, detects anomalies, and sends notifications when necessary.
 
-## System Architecture
+### System Architecture
 
 AirWatch consists of the following microservices:
 
@@ -22,9 +24,9 @@ AirWatch consists of the following microservices:
 - **Swagger/OpenAPI**: For API documentation
 - **Docker**: For containerization
 
-## Getting Started
+### Getting Started
 
-### Prerequisites
+#### Prerequisites
 
 - Java 17 or higher
 - Maven
