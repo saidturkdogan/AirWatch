@@ -1,3 +1,5 @@
+[![Image](https://i.hizliresim.com/8n5tsw9.png)](https://hizliresim.com/8n5tsw9)
+
 # AirWatch - Air Quality Monitoring System
 
 AirWatch is a microservice-based system designed to collect, analyze, and detect anomalies in air quality data. This system monitors air quality data from various locations, detects anomalies, and sends notifications when necessary.
