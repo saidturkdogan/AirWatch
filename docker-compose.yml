@@ -23,16 +23,16 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
 
-  # TimescaleDB servisini ekleyelim
+  # TimescaleDB service
   timescaledb:
     image: timescale/timescaledb:latest-pg14
     container_name: timescaledb
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password123
-      - POSTGRES_DB=airwatch
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1
+      POSTGRES_DB: airwatch
     volumes:
       - timescaledb-data:/var/lib/postgresql/data
 
