@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://i.hizliresim.com/8n5tsw9.png" alt="AirWatch Logo" width="600">
+  <img src="logo.png" alt="AirWatch Logo" width="600">
 </p>
 
 ## AirWatch - Air Quality Monitoring System
