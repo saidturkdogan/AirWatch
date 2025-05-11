@@ -19,7 +19,9 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092,PLAINTEXT_HOST://0.0.0.0:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
 
@@ -31,10 +33,64 @@ services:
       - "5432:5432"
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1
+      POSTGRES_PASSWORD: postgres
       POSTGRES_DB: airwatch
+      POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
       - timescaledb-data:/var/lib/postgresql/data
+      - ./pg_hba.conf:/etc/postgresql/pg_hba.conf
+
+  # API Gateway Service
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    ports:
+      - "8484:8484"
+    depends_on:
+      - air-quality
+      - anomaly-detection
+      - notification-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  # Air Quality Service
+  air-quality:
+    build: ./air-quality
+    container_name: air-quality
+    ports:
+      - "8081:8081"
+    depends_on:
+      - kafka
+      - timescaledb
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://timescaledb:5432/airwatch
+
+  # Anomaly Detection Service
+  anomaly-detection:
+    build: ./anomaly-detection
+    container_name: anomaly-detection
+    ports:
+      - "8082:8082"
+    depends_on:
+      - kafka
+      - timescaledb
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://timescaledb:5432/airwatch
+
+  # Notification Service
+  notification-service:
+    build: ./notification-service
+    container_name: notification-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      - kafka
+      - timescaledb
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://timescaledb:5432/airwatch
 
 volumes:
   timescaledb-data:

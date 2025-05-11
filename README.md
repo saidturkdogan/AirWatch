@@ -41,23 +41,27 @@ AirWatch consists of the following microservices:
    cd AirWatch
    ```
 
-2. Start the required services (Kafka, Zookeeper, InfluxDB) with Docker:
+2. Build all microservices:
+   ```bash
+   # On Windows (PowerShell)
+   .\build-services.bat
+
+   # On Windows (Command Prompt)
+   build-services.bat
+
+   # On Linux/Mac
+   chmod +x build-services.sh
+   ./build-services.sh
+   ```
+
+3. Start all services with Docker Compose:
    ```bash
    docker-compose up -d
    ```
 
-3. Build the project:
+4. Check if all services are running:
    ```bash
-   mvn clean install
-   ```
-
-4. Start the microservices:
-   ```bash
-   # Start each service in a separate terminal window
-   mvn spring-boot:run -pl api-gateway
-   mvn spring-boot:run -pl air-quality
-   mvn spring-boot:run -pl anomaly-detection
-   mvn spring-boot:run -pl notification-service
+   docker-compose ps
    ```
 
 ### API Access
