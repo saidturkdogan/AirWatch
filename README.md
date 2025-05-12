@@ -20,9 +20,13 @@ AirWatch consists of the following microservices:
 - **Spring Boot**: For microservice development
 - **Spring Cloud Gateway**: For API Gateway
 - **Kafka**: For asynchronous communication between microservices
-- **InfluxDB**: For storing time-series data
+- **TimescaleDB**: For storing time-series data
 - **Swagger/OpenAPI**: For API documentation
 - **Docker**: For containerization
+- **React**: For frontend application
+- **Vite**: For frontend build tooling
+- **Leaflet**: For interactive maps
+- **Recharts**: For data visualization
 
 ### Getting Started
 
@@ -30,6 +34,7 @@ AirWatch consists of the following microservices:
 
 - Java 17 or higher
 - Maven
+- Node.js and npm (for frontend development)
 - Docker and Docker Compose
 - Git
 
@@ -54,22 +59,52 @@ AirWatch consists of the following microservices:
    ./build-services.sh
    ```
 
-3. Start all services with Docker Compose:
+3. Build the frontend (optional, if you want to run it locally):
+   ```bash
+   cd frontend
+   npm install
+   npm run build
+   cd ..
+   ```
+
+4. Start all services with Docker Compose:
    ```bash
    docker-compose up -d
    ```
 
-4. Check if all services are running:
+5. Check if all services are running:
    ```bash
    docker-compose ps
    ```
+
+   > **Note**: When Docker Compose starts, it automatically initializes the TimescaleDB database with dummy data for cities using the `init.sql` script.
 
 ### API Access
 
 After the system is started, you can access the APIs via the following URLs:
 
-- **API Gateway**: http://localhost:8080
-- **Swagger UI**: http://localhost:8080/swagger-ui.html
+- **API Gateway**: http://localhost:8484
+- **Swagger UI**: http://localhost:8484/swagger-ui.html
+- **Frontend** (if running locally): http://localhost:5173 (using `npm run dev` in the frontend directory)
+
+## Frontend Application
+
+The AirWatch system includes a React-based frontend application that provides a visual interface for monitoring air quality data:
+
+- **Interactive Map**: Displays pollution levels across different cities with color-coded indicators
+- **Pollution Charts**: Shows trends and current levels of various pollutants
+- **Anomaly Warnings**: Highlights detected anomalies and potential health risks
+- **City Details**: Provides detailed pollution information for selected cities
+
+To run the frontend locally (for development):
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The frontend will be available at http://localhost:5173 and will automatically connect to the backend services through the API Gateway.
 
 ## API Endpoints
 
@@ -77,6 +112,7 @@ After the system is started, you can access the APIs via the following URLs:
 
 - `GET /api/air-quality?location={location}`: Retrieves air quality data for a specific location.
 - `GET /api/pollution-density`: Retrieves pollution density data by geographical regions.
+- `GET /api/air-quality/locations`: Retrieves a list of all available city locations.
 
 ### Anomaly Detection Service
 
@@ -89,11 +125,23 @@ After the system is started, you can access the APIs via the following URLs:
 
 ## Data Flow
 
-1. Air Quality Service collects air quality data and stores it in InfluxDB.
+1. Air Quality Service collects air quality data and stores it in TimescaleDB.
 2. Air Quality Service sends raw data to Kafka.
 3. Anomaly Detection Service consumes data from Kafka, analyzes it, and detects anomalies.
 4. Detected anomalies are stored by the Anomaly Detection Service and sent to Kafka.
 5. Notification Service consumes anomaly notifications from Kafka and processes them.
+6. Frontend application fetches data from the API Gateway and displays it on an interactive map and charts.
+
+## Database Initialization
+
+When the system starts up with Docker Compose, the TimescaleDB database is automatically initialized with the following:
+
+1. **TimescaleDB Extension**: The TimescaleDB extension is enabled for time-series data handling
+2. **Tables Creation**: Tables for air quality data, anomalies, and notifications are created
+3. **Hypertables**: The tables are converted to TimescaleDB hypertables for efficient time-series operations
+4. **Dummy Data**: Initial air quality data for various cities is inserted
+
+This initialization is handled by the `init.sql` script that is mounted as a volume in the TimescaleDB container.
 
 ## Development
 
@@ -137,25 +185,27 @@ If you encounter the "Connection to node -1 could not be established" error:
 
 2. Check the Kafka configuration:
    ```properties
-   spring.kafka.bootstrap-servers=localhost:9092
+   spring.kafka.bootstrap-servers=kafka:29092
    ```
 
-### InfluxDB Connection Issues
+### TimescaleDB Connection Issues
 
-For InfluxDB connection issues:
+For TimescaleDB connection issues:
 
-1. Make sure InfluxDB is running:
+1. Make sure TimescaleDB is running:
    ```bash
-   docker ps | grep influxdb
+   docker ps | grep timescaledb
    ```
 
-2. Check the InfluxDB configuration:
+2. Check the TimescaleDB configuration:
    ```properties
-   influxdb.url=http://localhost:8086
-   influxdb.token=my-super-secret-token
-   influxdb.org=airwatch
-   influxdb.bucket=air-quality
+   spring.datasource.url=jdbc:postgresql://timescaledb:5432/airwatch
+   spring.datasource.username=postgres
+   spring.datasource.password=postgres
+   spring.datasource.driver-class-name=org.postgresql.Driver
    ```
+
+3. If you encounter authentication issues, check the `pg_hba.conf` file and make sure the trust authentication method is properly configured.
 
 ## Contributing
 

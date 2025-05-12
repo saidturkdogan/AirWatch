@@ -5,72 +5,83 @@ spring:
   application:
     name: api-gateway
   cloud:
-    circuitbreaker:
-      resilience4j:
-        enabled: true
     gateway:
       routes:
         - id: air-quality-service
           uri: http://air-quality:8081
           predicates:
-            - Path=/api/air-quality/**,/api/pollution-density/**
+            - Path=/api/air-quality/**,/api/pollution-density/**,/api/air-quality/locations/**
           filters:
             - CircuitBreaker=airQualityCircuitBreaker
+          order: 0
         - id: anomaly-detection-service
           uri: http://anomaly-detection:8082
           predicates:
             - Path=/api/anomalies/**
           filters:
             - CircuitBreaker=anomalyDetectionCircuitBreaker
+          order: 0
         - id: notification-service
           uri: http://notification-service:8083
           predicates:
             - Path=/api/notifications/**
           filters:
             - CircuitBreaker=notificationCircuitBreaker
+          order: 0
         - id: air-quality-openapi
           uri: http://air-quality:8081
           predicates:
             - Path=/air-quality/api-docs/**
           filters:
             - RewritePath=/air-quality/api-docs(?<segment>/?.*),/api-docs${segment}
-            - CircuitBreaker=airQualityCircuitBreaker,fallbackUri=forward:/fallback/api-docs
+            - name: CircuitBreaker
+              args:
+                name: airQualityCircuitBreaker
+                fallbackUri: forward:/fallback/api-docs
+          order: 0
         - id: anomaly-detection-openapi
           uri: http://anomaly-detection:8082
           predicates:
             - Path=/anomaly-detection/api-docs/**
           filters:
             - RewritePath=/anomaly-detection/api-docs(?<segment>/?.*),/api-docs${segment}
-            - CircuitBreaker=anomalyDetectionCircuitBreaker,fallbackUri=forward:/fallback/api-docs
+            - name: CircuitBreaker
+              args:
+                name: anomalyDetectionCircuitBreaker
+                fallbackUri: forward:/fallback/api-docs
+          order: 0
         - id: notification-openapi
           uri: http://notification-service:8083
           predicates:
             - Path=/notification/api-docs/**
           filters:
             - RewritePath=/notification/api-docs(?<segment>/?.*),/api-docs${segment}
-            - CircuitBreaker=notificationCircuitBreaker,fallbackUri=forward:/fallback/api-docs
+            - name: CircuitBreaker
+              args:
+                name: notificationCircuitBreaker
+                fallbackUri: forward:/fallback/api-docs
+          order: 0
         - id: fallback-api-docs
           uri: forward:/fallback/api-docs
           predicates:
             - Path=/fallback/api-docs
-
-springdoc:
-  api-docs:
-    path: /api-docs
-  swagger-ui:
-    path: /swagger-ui.html
-  info:
-    title: API Gateway
-    description: API Gateway for AirWatch project
-    version: 1.0.0
-  swagger-ui:
-    urls:
-      - name: air-quality-service
-        url: /air-quality/api-docs
-      - name: anomaly-detection-service
-        url: /anomaly-detection/api-docs
-      - name: notification-service
-        url: /notification/api-docs
+          order: 0
+  springdoc:
+    api-docs:
+      path: /api-docs
+    swagger-ui:
+      path: /swagger-ui.html
+      urls:
+        - name: air-quality-service
+          url: /air-quality/api-docs
+        - name: anomaly-detection-service
+          url: /anomaly-detection/api-docs
+        - name: notification-service
+          url: /notification/api-docs
+    info:
+      title: API Gateway
+      description: API Gateway for AirWatch project
+      version: 1.0.0
 
 logging:
   level:

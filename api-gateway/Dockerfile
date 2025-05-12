@@ -1,5 +1,5 @@
-FROM eclipse-temurin:17-jdk-alpine
+FROM openjdk:17-jdk-slim
 WORKDIR /app
-COPY target/api-gateway-*.jar app.jar
-EXPOSE 8484
+COPY target/*.jar app.jar
+COPY src/main/resources/application-docker.yml /app/application-docker.yml
 ENTRYPOINT ["java", "-jar", "app.jar"]

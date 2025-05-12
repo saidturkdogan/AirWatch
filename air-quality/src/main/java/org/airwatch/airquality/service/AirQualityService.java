@@ -31,6 +31,10 @@ public class AirQualityService {
             "Adana", "Konya", "Gaziantep", "Mersin", "Diyarbakir"
     };
 
+    public List<String> getAllLocations() {
+        return List.of(locations);
+    }
+
     // Coordinates for the sample locations (approximate)
     private final double[][] coordinates = {
             {41.0082, 28.9784}, // Istanbul
@@ -58,6 +62,15 @@ public class AirQualityService {
     public void generateSampleData() {
         log.info("Generating sample air quality data");
 
+        // First, delete any existing data to ensure only one record per location
+        for (String location : locations) {
+            List<AirQualityData> existingData = airQualityRepository.findByLocation(location);
+            if (!existingData.isEmpty()) {
+                airQualityRepository.deleteAll(existingData);
+            }
+        }
+
+        // Then generate new data for each location
         for (int i = 0; i < locations.length; i++) {
             AirQualityData data = generateRandomAirQualityData(locations[i], coordinates[i][0], coordinates[i][1]);
 

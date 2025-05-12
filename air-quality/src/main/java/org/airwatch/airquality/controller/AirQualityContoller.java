@@ -38,4 +38,11 @@ public class AirQualityContoller {
         List<PollutionDensity> data = airQualityService.getPollutionDensityByRegion();
         return ResponseEntity.ok(data);
     }
+
+    @GetMapping("/air-quality/locations")
+    @Operation(summary = "Get all available locations", description = "Retrieves a list of all available city locations")
+    public ResponseEntity<List<String>> getAllLocations() {
+        List<String> locations = airQualityService.getAllLocations();
+        return ResponseEntity.ok(locations);
+    }
 }
